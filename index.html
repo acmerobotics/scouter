@@ -10,8 +10,18 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div class="ui relaxed grid">
+    <div class="ui relaxed padded grid">
       <div class="ten wide column">
+        <h1 class="ui left floated header">Matches</h1>
+        <div class="ui right floated small green labeled icon button" id="addMatch">
+          <i class="add square icon"></i> Add Match
+        </div>
+        <div class="ui right floated small blue labeled icon button" id="export">
+          <i class="external share icon"></i> Export
+        </div>
+        <div class="ui right floated small blue labeled icon button" id="import">
+          <i class="folder open icon"></i> Import
+        </div>
         <table class="ui fixed table">
           <thead>
             <tr>
@@ -20,26 +30,17 @@
               <th>Red 2</th>
               <th>Blue 1</th>
               <th>Blue 2</th>
-              <th>Blue Score</th>
               <th>Red Score</th>
+              <th>Blue Score</th>
             </tr>
           </thead>
           <tbody id="matches">
 
           </tbody>
-          <tfoot class="full-width">
-            <tr>
-              <th></th>
-              <th colspan="6">
-                <div class="ui right floated small primary labeled icon button" id="addMatch">
-                  <i class="add square icon"></i> Add Match
-                </div>
-              </th>
-            </tr>
-          </tfoot>
         </table>
       </div>
       <div class="six wide column">
+        <h1 class="ui header">Rankings</h1>
         <table class="ui fixed table">
           <thead>
             <tr>

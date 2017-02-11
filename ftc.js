@@ -55,7 +55,7 @@ var GITHUB_DATA = "TournamentMatchCode,Match,Result,Red1,Red2,Red3,Blue1,Blue2,B
 1617velv-canc-gh-F-1,F-1,145-40 R,7591,8872,0,3873,8577,0,145,30,0,75,40,0,40,0,0,40,0,0\n\
 1617velv-canc-gh-F-2,F-2,95-25 R,7591,8872,0,3873,8577,0,95,0,0,55,40,0,25,5,0,20,0,0"
 
-BURLINGAME_DATA = "TournamentMatchCode,Match,Result,Red1,Red2,Red3,Blue1,Blue2,Blue3,RTot,RAuto,RAutoB,RTele,REnd,RPen,BTot,BAuto,BAutoB,BTele,BEnd,BPen\n\
+var BURLINGAME_DATA = "TournamentMatchCode,Match,Result,Red1,Red2,Red3,Blue1,Blue2,Blue3,RTot,RAuto,RAutoB,RTele,REnd,RPen,BTot,BAuto,BAutoB,BTele,BEnd,BPen\n\
 1617velv-canc-bu1-Q-1,Q-1,20-20 T,5211,9784,0,11689,11201,0,20,0,0,20,0,0,20,0,0,20,0,0\n\
 1617velv-canc-bu1-Q-2,Q-2,170-30 R,7591,10794,0,4157,11387,0,170,100,0,70,0,0,30,0,0,30,0,0\n\
 1617velv-canc-bu1-Q-3,Q-3,85-36 R,10189,548,0,11575,9965,0,85,55,0,30,0,0,36,5,0,21,10,0\n\
@@ -85,22 +85,57 @@ BURLINGAME_DATA = "TournamentMatchCode,Match,Result,Red1,Red2,Red3,Blue1,Blue2,B
 var CSV = {
   parse: function(str) {
     var lines = str.split("\n");
-    var data = {};
+    var items = [];
     var header = lines[0].split(",");
-    for (var j = 0; j < header.length; j++) {
-      data[header[j]] = [];
-    }
     for (var i = 1; i < lines.length; i++) {
+      var item = {};
       var parts = lines[i].split(",");
       for (var j = 0; j < parts.length; j++) {
         var part = parts[j];
+        if (part == "") {
+          continue;
+        }
         if (!isNaN(parseInt(part, 10))) {
           part = parseInt(part, 10);
         }
-        data[header[j]].push(part);
+        item[header[j]] = part;
+      }
+      if (item == {}) {
+        continue;
+      }
+      items.push(item);
+    }
+    return items;
+  },
+  stringify: function(items) {
+    var str = "";
+    var header = [];
+    var firstItem = items[0];
+    for (var key in firstItem) {
+      if (firstItem.hasOwnProperty(key)) {
+        header.push(key);
+        str += key + ",";
       }
     }
-    return data;
+    for (var i = 0; i < items.length; i++) {
+      str += "\n";
+      for (var j = 0; j < header.length; j++) {
+        str += items[i][header[j]] + ",";
+      }
+    }
+    return str;
+  },
+  save: function (data, fileName) {
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    var csv = CSV.stringify(data),
+        blob = new Blob([csv], {type: "octet/stream"}),
+        url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }
 
@@ -116,20 +151,20 @@ JSON.values = function(data) {
 
 var INPUT_HTML = '<input type="text" style="width: 100%" />';
 
-var MATCH_DATA = [];
-
-var testData = CSV.parse(BURLINGAME_DATA);
-for (var i = 0; i < 25; i++) {
-  var m = {};
-  m.match = (i + 1);
-  m.red1 = testData.Red1[i];
-  m.red2 = testData.Red2[i];
-  m.blue1 = testData.Blue1[i];
-  m.blue2 = testData.Blue2[i];
-  m.redScore = testData.RTot[i] - testData.RPen[i];
-  m.blueScore = testData.BTot[i] - testData.BPen[i];
-  MATCH_DATA.push(m);
-}
+// var MATCH_DATA = [];
+//
+// var testData = CSV.parse(INTEL_DATA);
+// for (var i = 0; i < 22; i++) {
+//   var m = {};
+//   m.match = (i + 1);
+//   m.red1 = testData.Red1[i];
+//   m.red2 = testData.Red2[i];
+//   m.blue1 = testData.Blue1[i];
+//   m.blue2 = testData.Blue2[i];
+//   m.redScore = testData.RTot[i] - testData.RPen[i];
+//   m.blueScore = testData.BTot[i] - testData.BPen[i];
+//   MATCH_DATA.push(m);
+// }
 
 function MatchTable(schema, $tbody) {
   this.schema = schema;
@@ -146,6 +181,7 @@ function MatchTable(schema, $tbody) {
       this_.items[this_.getRow($td)][this_.schema[this_.getCol($td)]] = parseInt(val, 10);
       $parent.html(val);
       $parent.removeClass("editing");
+      updateRankings();
     }
   });
 
@@ -164,16 +200,16 @@ function MatchTable(schema, $tbody) {
 }
 MatchTable.prototype = {
   add: function(data) {
-    var html = "<tr>";
+    var html = "<tr><td>" + (this.items.length + 1) + "</td>";
 
     if (typeof data == "undefined") {
       data = {};
-      for (var i = 0; i < this.schema.length; i++) {
+      for (var i = 1; i < this.schema.length; i++) {
         html += '<td><div class="ui input editing">' + INPUT_HTML + '</td></div>';
         data[this.schema[i]] = 0;
       }
     } else {
-      for (var i = 0; i < this.schema.length; i++) {
+      for (var i = 1; i < this.schema.length; i++) {
         html += '<td><div class="ui input">' + data[this.schema[i]] + '</td></div>';
       }
     }
