@@ -231,7 +231,7 @@ MatchTable.prototype = {
     return this.items.length;
   },
   isValid: function(input) {
-    return input.match(/^\d+$/);
+    return input.match(/^\d+\*?$/);
   },
   getItems: function() {
     return this.items;
@@ -284,16 +284,16 @@ var Competition = {
 
       A[red1][red1] += 1;
       A[red1][red2] += 1;
-      b[red1] += match.redScore;
+      b[red1] += (match.redScore - match.redPenalty);
       A[red2][red1] += 1;
       A[red2][red2] += 1;
-      b[red2] += match.redScore;
+      b[red2] += (match.redScore - match.redPenalty);
       A[blue1][blue1] += 1;
       A[blue1][blue2] += 1;
-      b[blue1] += match.blueScore;
+      b[blue1] += (match.blueScore - match.bluePenalty);
       A[blue2][blue1] += 1;
       A[blue2][blue2] += 1;
-      b[blue2] += match.blueScore;
+      b[blue2] += (match.blueScore - match.bluePenalty);
 
       if (match.redScore == match.blueScore) {
         teamDetails[red1].qp += 1;
@@ -315,7 +315,9 @@ var Competition = {
       teamDetails[blue2].rp += smallerScore;
     }
 
+    var startTime = (new Date()).getTime();
     var x = numeric.solve(A, b);
+    console.log("solution took " + ((new Date()).getTime() - startTime) + "ms");
     for (var i = 0; i < numTeams; i++) {
       teamDetails[i].opr = x[i];
     }

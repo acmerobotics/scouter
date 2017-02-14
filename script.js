@@ -16,7 +16,7 @@ function updateRankings() {
 }
 
 $(document).ready(function() {
-  window.table = new MatchTable(["match", "red1", "red2", "blue1", "blue2", "redScore", "blueScore"], $("#matches"));
+  window.table = new MatchTable(["match", "red1", "red2", "blue1", "blue2", "redPenalty", "redScore", "bluePenalty", "blueScore"], $("#matches"));
   // for (var i = 0; i < MATCH_DATA.length; i++) {
   //   table.add(MATCH_DATA[i]);
   // }
@@ -29,7 +29,11 @@ $(document).ready(function() {
 
   $("#export").on("click", function(evt) {
     CSV.save(table.items, "match-data-" + (new Date()).getTime() + ".csv");
-  })
+  });
+
+  $("#refresh").on("click", function(evt) {
+    window.location = window.location;
+  });
 
   $("#import").on("click", function(evt) {
     var input = document.createElement("input");
@@ -48,17 +52,20 @@ $(document).ready(function() {
           var data = CSV.parse(evt.target.result);
           console.log(data);
           if (data[0].hasOwnProperty("TournamentMatchCode")) {
-            for (var i = 0; i < data.length; i++) {
+            for (var i = 0; i < data.length - 1; i++) {
+              console.log(data[i].Match);
               if (data[i].Match.indexOf("Q") == -1) {
-                break;
+                continue;
               }
               table.add({
                 red1: data[i].Red1,
                 red2: data[i].Red2,
                 blue1: data[i].Blue1,
                 blue2: data[i].Blue2,
-                redScore: data[i].RTot - data[i].RPen,
-                blueScore: data[i].BTot - data[i].BPen
+                redPenalty: data[i].RPen,
+                redScore: data[i].RTot,
+                bluePenalty: data[i].BPen,
+                blueScore: data[i].BTot
               });
             }
           } else {

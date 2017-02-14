@@ -11,7 +11,7 @@
   </head>
   <body>
     <div class="ui relaxed padded grid">
-      <div class="ten wide column">
+      <div class="eight wide column">
         <h1 class="ui left floated header">Matches</h1>
         <div class="ui right floated small green labeled icon button" id="addMatch">
           <i class="add square icon"></i> Add Match
@@ -22,16 +22,28 @@
         <div class="ui right floated small blue labeled icon button" id="import">
           <i class="folder open icon"></i> Import
         </div>
+        <div class="ui right floated small red labeled icon button" id="refresh">
+          <i class="refresh icon"></i> Refresh
+        </div>
         <table class="ui fixed table">
           <thead>
             <tr>
+              <th class="single line"></th>
+              <th colspan="2">Red</th>
+              <th colspan="2">Blue</th>
+              <th colspan="2">Red Score</th>
+              <th colspan="2">Blue Score</th>
+            </tr>
+            <tr>
               <th class="single line">Match</th>
-              <th>Red 1</th>
-              <th>Red 2</th>
-              <th>Blue 1</th>
-              <th>Blue 2</th>
-              <th>Red Score</th>
-              <th>Blue Score</th>
+              <th>1</th>
+              <th>2</th>
+              <th>1</th>
+              <th>2</th>
+              <th>Penalty</th>
+              <th>Total</th>
+              <th>Penalty</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody id="matches">
@@ -39,7 +51,7 @@
           </tbody>
         </table>
       </div>
-      <div class="six wide column">
+      <div class="eight wide column">
         <h1 class="ui header">Rankings</h1>
         <table class="ui fixed table">
           <thead>
