@@ -1,18 +1,22 @@
 function updateRankings() {
   var $rankings = $("#rankingsTable");
+  var $progress = $("#progress");
   $rankings.html("");
+  $progress.addClass("active");
   var matches = table.getItems();
-  var teams = Competition.computeStats(matches);
-  for (var i = 0; i < teams.length; i++) {
-    var team = teams[i];
-    var row = "<tr><td>";
-    row += (i + 1) + "</td><td>";
-    row += team.number + "</td><td>";
-    row += team.opr.toFixed(2) + "</td><td>";
-    row += team.qp + "</td><td>";
-    row += team.rp + "</td></tr>";
-    $rankings.append(row);
-  }
+  Competition.computeStats(matches, function(data) {
+    $progress.removeClass("active");
+    for (var i = 0; i < data.length; i++) {
+      var team = data[i];
+      var row = "<tr><td>";
+      row += (i + 1) + "</td><td>";
+      row += team.number + "</td><td>";
+      row += team.opr.toFixed(2) + "</td><td>";
+      row += team.qp + "</td><td>";
+      row += team.rp + "</td></tr>";
+      $rankings.append(row);
+    }
+  });
 }
 
 $(document).ready(function() {
