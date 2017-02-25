@@ -1,5 +1,5 @@
 function updateRankings() {
-  var $rankings = $("#rankings");
+  var $rankings = $("#rankingsTable");
   $rankings.html("");
   var matches = table.getItems();
   var teams = Competition.computeStats(matches);
@@ -16,7 +16,7 @@ function updateRankings() {
 }
 
 $(document).ready(function() {
-  window.table = new MatchTable(["match", "red1", "red2", "blue1", "blue2", "redPenalty", "redScore", "bluePenalty", "blueScore"], $("#matches"));
+  window.table = new MatchTable(["match", "red1", "red2", "blue1", "blue2", "redPenalty", "redScore", "bluePenalty", "blueScore"], $("#matchesTable"));
   // for (var i = 0; i < MATCH_DATA.length; i++) {
   //   table.add(MATCH_DATA[i]);
   // }
@@ -33,6 +33,10 @@ $(document).ready(function() {
 
   $("#refresh").on("click", function(evt) {
     window.location = window.location;
+  });
+
+  $("#print").on("click", function(evt) {
+    window.print();
   });
 
   $("#import").on("click", function(evt) {

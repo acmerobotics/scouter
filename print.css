@@ -1,0 +1,5 @@
+@media print {
+  #matches, #print { display: none; }
+  #rankings { width: 100% !important; }
+  #rankings td { padding: .5em .7em; }
+}
