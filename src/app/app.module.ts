@@ -5,9 +5,14 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
+import { MatchTableComponent } from './match-table.component';
+import { RankingsTableComponent } from './rankings-table.component';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MatchTableComponent,
+    RankingsTableComponent
   ],
   imports: [
     BrowserModule,

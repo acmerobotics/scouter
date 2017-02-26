@@ -1,3 +1,13 @@
-<h1>
-  {{title}}
-</h1>
+<div class="ui relaxed padded grid">
+  <div id="matches" class="ten wide column">
+    <h1 class="ui left floated header">Matches</h1>
+    <match-table [matches]="matches"></match-table>
+  </div>
+  <div id="rankings" class="six wide column">
+    <div id="progress" class="ui dimmer">
+      <div class="ui loader"></div>
+    </div>
+    <h1 class="ui left floated header">Rankings</h1>
+    <rankings-table [matches]="matches"></rankings-table>
+  </div>
+</div>

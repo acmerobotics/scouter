@@ -1,0 +1,46 @@
+<div (click)="addMatch()" class="ui right floated small green labeled icon button" id="addMatch">
+  <i class="add square icon"></i> Add Match
+</div>
+<div class="ui right floated small blue labeled icon button" id="export">
+  <i class="external share icon"></i> Export
+</div>
+<div class="ui right floated small blue labeled icon button" id="import">
+  <i class="folder open icon"></i> Import
+</div>
+<div (click)="logMatches()" class="ui right floated small purple labeled icon button">
+  <i class="print icon"></i> Log
+</div>
+<table class="ui fixed table">
+  <thead>
+    <tr>
+      <th class="single line">Match</th>
+      <th>Red</th>
+      <th>Blue</th>
+      <th>Red Penalties</th>
+      <th>Red Score</th>
+      <th>Blue Penalties</th>
+      <th>Blue Score</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="matchesTable">
+    <template ngFor let-match [ngForOf]="matches" let-matchIndex="index" [ngForTrackBy]="trackById">
+      <template ngFor let-red [ngForOf]="match.redTeams" let-i="index" [ngForTrackBy]="trackById">
+        <tr>
+          <td *ngIf="i == 0" [rowSpan]="match.redTeams.length">{{ matchIndex + 1 }}</td>
+          <td>{{ match.redTeams[i] }}</td>
+          <td>{{ match.blueTeams[i] }}</td>
+          <td *ngIf="i == 0" [rowSpan]="match.redTeams.length">{{ match.redScore.penalties }}</td>
+          <td *ngIf="i == 0" [rowSpan]="match.redTeams.length">{{ match.redScore.total }}</td>
+          <td *ngIf="i == 0" [rowSpan]="match.redTeams.length">{{ match.blueScore.penalties }}</td>
+          <td *ngIf="i == 0" [rowSpan]="match.redTeams.length">{{ match.blueScore.total }}</td>
+          <td *ngIf="i == 0" [rowSpan]="match.redTeams.length">
+            <div (click)="removeMatch(match)" class="ui small icon button">
+              <i class="delete icon"></i>
+            </div>
+          </td>
+       </tr>
+      </template>
+    </template>
+  </tbody>
+</table>
