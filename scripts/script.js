@@ -56,12 +56,9 @@ $(document).ready(function() {
 
         // Closure to capture the file information.
         reader.onload = function(evt) {
-          console.log(evt.target.result);
           var data = CSV.parse(evt.target.result);
-          console.log(data);
           if (data[0].hasOwnProperty("TournamentMatchCode")) {
             for (var i = 0; i < data.length - 1; i++) {
-              console.log(data[i].Match);
               if (data[i].Match.indexOf("Q") == -1) {
                 continue;
               }

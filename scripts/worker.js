@@ -1,4 +1,4 @@
-importScripts("node_modules\\numeric\\numeric-1.2.6.min.js");
+importScripts("/libs/numeric-1.2.6.min.js");
 
 onmessage = function(evt) {
   var matches = evt.data;

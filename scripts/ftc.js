@@ -146,7 +146,7 @@ MatchTable.prototype = {
 };
 
 var Competition = {
-  _worker: new Worker("worker.js"),
+  _worker: new Worker("scripts/worker.js"),
   computeStats: function(matches, callback) {
     this._worker.postMessage(matches);
     this._worker.onmessage = function(evt) {
