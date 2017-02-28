@@ -11,7 +11,7 @@ export class MatchParserService {
         let rows = CSV.parse(data);
         for (var i = 0; i < rows.length; i++) {
             var row = rows[i];
-            if (row.Match.indexOf("Q") == -1) continue;
+            // if (row.Match.indexOf("Q") == -1) continue;
             var match = new Match();
             match.redTeams = [ row.Red1, row.Red2 ];
             match.blueTeams = [ row.Blue1, row.Blue2 ];

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Directive, ElementRef, HostListener } from '@angular/core';
 
 import { FtcService } from './ftc.service';
 
@@ -15,11 +15,17 @@ export class RankingsTableComponent implements OnChanges {
 
   ngOnChanges() {
     console.log("on changes");
-    this.computeRankings();
+    this.updateRankings();
   }
 
-  computeRankings() {
+  updateRankings() {
+    console.log(this.matches);
     this.rankings = this.ftcService.getStats(this.matches);
     console.log(this.rankings);
   }
+
+  oprReady(): boolean {
+    return this.rankings[0].opr === this.rankings[0].opr;
+  }
+
 }

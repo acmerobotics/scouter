@@ -1,15 +1,13 @@
 <div class="ui right floated small blue labeled icon button">
   <i class="print icon"></i> Print
 </div>
-<div (click)="computeRankings()" class="ui right floated small red labeled icon button">
-  <i class="refresh icon"></i> Recalculate
-</div>
-<table class="ui fixed table">
+<p *ngIf="!oprReady()">Not enough data for OPR</p>
+<table class="ui sortable fixed table">
   <thead>
     <tr>
       <th class="single line">Rank</th>
       <th>Number</th>
-      <th>OPR</th>
+      <th *ngIf="oprReady()">OPR</th>
       <th>QP</th>
       <th>RP</th>
     </tr>
@@ -18,7 +16,7 @@
     <tr *ngFor="let team of rankings">
       <td>{{ rankings.indexOf(team) + 1 }}</td>
       <td>{{ team.number }}</td>
-      <td>{{ team.opr.toFixed(2) }}</td>
+      <td *ngIf="oprReady()">{{ team.opr.toFixed(2) }}</td>
       <td>{{ team.qp }}</td>
       <td>{{ team.rp }}</td>
     </tr>

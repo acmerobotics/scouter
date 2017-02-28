@@ -5,14 +5,16 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
-import { MatchTableComponent } from './match-table.component';
+import { MatchTableComponent, EditableTextComponent, JoinPipe } from './match-table.component';
 import { RankingsTableComponent } from './rankings-table.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MatchTableComponent,
-    RankingsTableComponent
+    RankingsTableComponent,
+    JoinPipe,
+    EditableTextComponent
   ],
   imports: [
     BrowserModule,
