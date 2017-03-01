@@ -1,7 +1,7 @@
 <div class="ui relaxed padded grid">
   <div id="matches" class="ten wide column">
     <h1 class="ui left floated header">Matches</h1>
-    <match-table (update)="rankings.updateRankings()" [matches]="matches"></match-table>
+    <match-table (update)="rankings.matches=$event;rankings.updateRankings()" [matches]="matches"></match-table>
   </div>
   <div id="rankings" class="six wide column">
     <div id="progress" class="ui dimmer">

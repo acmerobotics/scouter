@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
 import { Match } from './match';
 import { TeamMatchResult } from './team-match-result';
 
+import '../../node_modules/numeric/numeric-1.2.6';
+
 @Injectable()
 export class FtcService {
   getUniqueTeams(matches: Match[]): number[] {

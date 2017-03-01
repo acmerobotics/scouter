@@ -1,17 +1,22 @@
-import { Input, Output, Component, EventEmitter, AfterContentChecked, Pipe, PipeTransform, OnInit } from '@angular/core';
+import { Input, Output, Component, EventEmitter, AfterContentChecked, Pipe, PipeTransform, OnInit, ElementRef } from '@angular/core';
+
+import { MatchParserService } from './match-parser.service';
 
 import { Match } from './match';
 
-
+import { CSV } from './csv';
 
 @Component({
   templateUrl: './match-table.component.html',
-  selector: 'match-table'
+  selector: 'match-table',
+  providers: [MatchParserService]
 })
 export class MatchTableComponent {
   @Input() matches;
 
-  @Output() update: EventEmitter<any> = new EventEmitter();
+  @Output() update: EventEmitter<Match[]> = new EventEmitter();
+
+  constructor(private matchParser: MatchParserService) { }
 
   addMatch(): void {
     this.matches.push(Match.empty());
@@ -32,13 +37,67 @@ export class MatchTableComponent {
     console.log("emitting");
     this.update.emit(this.matches);
   }
+
+  downloadMatchData() {
+    var a = document.createElement("a");
+    a.style.display = "none";
+    document.body.appendChild(a);
+    var blob = new Blob([JSON.stringify(this.matches)], { type: 'octet/stream' });
+    var url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = "matches.json";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  importMatchData() {
+    var this_ = this;
+    var input = document.createElement("input");
+    input.type = "file";
+    input.style.display = "none";
+    input.addEventListener("change", function(evt) {
+      var files = input.files; // FileList object
+
+      // Loop through the FileList and render image files as thumbnails.
+      for (var i = 0, f; f = files[i]; i++) {
+        var reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = function(evt) {
+          var contents: string = reader.result;
+          console.log(contents);
+          if (contents.charAt(0) == "[") {
+            this_.matches = [];
+            var data = JSON.parse(contents);
+            for (var i = 0; i < data.length; i++) {
+              var m = new Match();
+              for (var key in data[i]) {
+                m[key] = data[i][key];
+              }
+              this_.matches.push(m);
+            }
+          } else {
+            this_.matches = this_.matchParser.parseCSV(contents);
+          }
+          console.log("import");
+          console.log(this_.matches);
+          this_.updateMatches();
+        };
+
+        // Read in the image file as a data URL.
+        reader.readAsText(f);
+      }
+    }, false);
+    document.body.appendChild(input);
+    input.click();
+  }
 }
 
 @Component({
   selector: 'editable-text',
   template: `
   <div *ngIf="editing" class="ui fluid input">
-    <input (blur)="toggleEdit()" [(ngModel)]="val" type="text" />
+    <input (blur)="toggleEdit()" [(ngModel)]="val" type="text" style="width: 100%;" />
   </div>
   <span (dblclick)="toggleEdit()" *ngIf="!editing">{{ obj[key] | join:'&nbsp;&nbsp;&nbsp;&nbsp;' }}</span>
   `
@@ -65,6 +124,9 @@ export class EditableTextComponent implements OnInit {
 
   toggleEdit() {
     if (this.editing) {
+      if (this.val == "") {
+        return;
+      }
       var array;
       if (this.array) {
         array = this.val.split(",");
@@ -75,7 +137,11 @@ export class EditableTextComponent implements OnInit {
         }
         this.obj[this.key] = array;
       } else {
-        this.obj[this.key] = this.val;
+        var val: any = this.val;
+        if (!isNaN(val)) {
+          val = parseInt(val, 10);
+        }
+        this.obj[this.key] = val;
       }
       this.change.emit();
     }

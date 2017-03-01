@@ -1,21 +1,18 @@
 <div (click)="addMatch()" class="ui right floated small green labeled icon button" id="addMatch">
   <i class="add square icon"></i> Add Match
 </div>
-<div class="ui right floated small blue labeled icon button" id="export">
+<div (click)="downloadMatchData()" class="ui right floated small blue labeled icon button" id="export">
   <i class="external share icon"></i> Export
 </div>
-<div class="ui right floated small blue labeled icon button" id="import">
+<div (click)="importMatchData()" class="ui right floated small blue labeled icon button" id="import">
   <i class="folder open icon"></i> Import
 </div>
-<div (click)="logMatches()" class="ui right floated small purple labeled icon button">
-  <i class="print icon"></i> Log
-</div>
-<table class="ui fixed table">
+<table class="ui fixed table" style="table-layout: fixed;">
   <thead>
     <tr>
       <th>Match</th>
-      <th>Red Alliance</th>
-      <th>Blue Alliance</th>
+      <th colspan="2">Red Alliance</th>
+      <th colspan="2">Blue Alliance</th>
       <th>Red Penalties</th>
       <th>Red Score</th>
       <th>Blue Penalties</th>
@@ -26,12 +23,12 @@
   <tbody id="matchesTable">
     <tr *ngFor="let match of matches; let matchIndex = index">
       <td>{{ matchIndex + 1 }}</td>
-      <td class="collapsing">
+      <td colspan="2">
         <i *ngIf="match.isRedWinner()" class="yellow star icon"></i>
         <!--{{ match.redTeams | join:'&nbsp;&nbsp;&nbsp;&nbsp;' }}-->
         <editable-text (change)="updateMatches()" [key]="'redTeams'" [obj]="match"></editable-text>
       </td>
-      <td class="collapsing">
+      <td colspan="2">
         <i *ngIf="match.isBlueWinner()" class="yellow star icon"></i>
         <!--{{ match.redTeams | join:'&nbsp;&nbsp;&nbsp;&nbsp;' }}-->
         <editable-text (change)="updateMatches()" [key]="'blueTeams'" [obj]="match"></editable-text>

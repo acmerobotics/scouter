@@ -2,6 +2,8 @@ import { Component, Input, OnChanges, Directive, ElementRef, HostListener } from
 
 import { FtcService } from './ftc.service';
 
+import { Match } from './match';
+
 @Component({
   templateUrl: './rankings-table.component.html',
   selector: 'rankings-table',
@@ -25,7 +27,7 @@ export class RankingsTableComponent implements OnChanges {
   }
 
   oprReady(): boolean {
-    return this.rankings[0].opr === this.rankings[0].opr;
+    return this.rankings.length > 0 && this.rankings[0].opr === this.rankings[0].opr;
   }
 
 }
