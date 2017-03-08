@@ -26,24 +26,24 @@
       <td colspan="2">
         <i *ngIf="match.isRedWinner()" class="yellow star icon"></i>
         <!--{{ match.redTeams | join:'&nbsp;&nbsp;&nbsp;&nbsp;' }}-->
-        <editable-text (change)="updateMatches()" [key]="'redTeams'" [obj]="match"></editable-text>
+        <editable-num (change)="updateMatches()" [key]="'redTeams'" [obj]="match"></editable-num>
       </td>
       <td colspan="2">
         <i *ngIf="match.isBlueWinner()" class="yellow star icon"></i>
         <!--{{ match.redTeams | join:'&nbsp;&nbsp;&nbsp;&nbsp;' }}-->
-        <editable-text (change)="updateMatches()" [key]="'blueTeams'" [obj]="match"></editable-text>
+        <editable-num (change)="updateMatches()" [key]="'blueTeams'" [obj]="match"></editable-num>
       </td>
       <td>
-        <editable-text (change)="updateMatches()" [key]="'penalties'" [obj]="match.redScore"></editable-text>
+        <editable-num (change)="updateMatches()" [key]="'penalties'" [obj]="match.redScore"></editable-num>
       </td>
       <td>
-        <editable-text (change)="updateMatches()" [key]="'total'" [obj]="match.redScore"></editable-text>
+        <editable-num (change)="updateMatches()" [key]="'total'" [obj]="match.redScore"></editable-num>
+      </td>     
+      <td>
+        <editable-num (change)="updateMatches()" [key]="'penalties'" [obj]="match.blueScore"></editable-num>
       </td>
       <td>
-        <editable-text (change)="updateMatches()" [key]="'penalties'" [obj]="match.blueScore"></editable-text>
-      </td>
-      <td>
-        <editable-text (change)="updateMatches()" [key]="'total'" [obj]="match.blueScore"></editable-text>
+        <editable-num (change)="updateMatches()" [key]="'total'" [obj]="match.blueScore"></editable-num>
       </td>
       <td>
         <div (click)="removeMatch(match)" class="ui small icon button">

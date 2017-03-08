@@ -4,6 +4,16 @@ import { FtcService } from './ftc.service';
 
 import { Match } from './match';
 
+declare var jsPDF: any;
+
+const REPORT_COLUMNS = [
+  { title: "Rank", dataKey: "rank" },
+  { title: "Team", dataKey: "number" },
+  { title: "OPR", dataKey: "formattedOpr" },
+  { title: "QP", dataKey: "qp" },
+  { title: "RP", dataKey: "rp" }
+];
+
 @Component({
   templateUrl: './rankings-table.component.html',
   selector: 'rankings-table',
@@ -16,8 +26,16 @@ export class RankingsTableComponent implements OnChanges {
   constructor(private ftcService: FtcService) { }
 
   ngOnChanges() {
-    console.log("on changes");
     this.updateRankings();
+  }
+  
+  downloadRankings() {
+    var doc = new jsPDF();
+    doc.text("Rankings", 15, 25);
+    doc.autoTable(REPORT_COLUMNS, this.rankings, {
+      startY: 35
+    });
+    doc.save("report.pdf");
   }
 
   updateRankings() {

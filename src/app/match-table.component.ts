@@ -94,7 +94,7 @@ export class MatchTableComponent {
 }
 
 @Component({
-  selector: 'editable-text',
+  selector: 'editable-num',
   template: `
   <div *ngIf="editing" class="ui fluid input">
     <input (blur)="toggleEdit()" [(ngModel)]="val" type="text" style="width: 100%;" />
@@ -102,7 +102,7 @@ export class MatchTableComponent {
   <span (dblclick)="toggleEdit()" *ngIf="!editing">{{ obj[key] | join:'&nbsp;&nbsp;&nbsp;&nbsp;' }}</span>
   `
 })
-export class EditableTextComponent implements OnInit {
+export class EditableNumberComponent implements OnInit {
   @Input() key;
   @Input() obj;
 
@@ -123,23 +123,26 @@ export class EditableTextComponent implements OnInit {
   }
 
   toggleEdit() {
+    console.log("toggle edit");
     if (this.editing) {
-      if (this.val == "") {
+      if (this.val === "") {
         return;
       }
-      var array;
       if (this.array) {
-        array = this.val.split(",");
+        var array = this.val.split(",");
         for (var i = 0; i < array.length; i++) {
-          if (!isNaN(array[i])) {
-            array[i] = parseInt(array[i], 10);
+          var val = parseInt(array[i], 10);
+          if (val != val) {
+            console.log("invalid: " + this.val);
+            return;
           }
         }
         this.obj[this.key] = array;
       } else {
-        var val: any = this.val;
-        if (!isNaN(val)) {
-          val = parseInt(val, 10);
+        var val = parseInt(this.val, 10);
+        if (val != val) {
+          console.log("invalid: " + this.val);
+          return;
         }
         this.obj[this.key] = val;
       }

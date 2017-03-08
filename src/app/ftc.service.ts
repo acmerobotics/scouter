@@ -1,14 +1,22 @@
-///<reference path="../../@types/numeric.d.ts"/>
-
 import { Injectable } from '@angular/core';
 
 import { Match } from './match';
 import { TeamMatchResult } from './team-match-result';
 
+import * as jsPDF from 'jspdf';
+
 import '../../node_modules/numeric/numeric-1.2.6';
+
+declare var numeric: any;
 
 @Injectable()
 export class FtcService {
+  generateReport(rankings: TeamMatchResult[]): jsPDF {
+    var doc = new jsPDF();
+
+    return doc;
+  }
+
   getUniqueTeams(matches: Match[]): number[] {
     var allTeams: number[] = [];
     for (var i = 0; i < matches.length; i++) {
@@ -98,6 +106,10 @@ export class FtcService {
         return 0;
       }
     });
+
+    for (var i = 0; i < numTeams; i++) {
+      results[i].rank = (i + 1);
+    }
 
     return results;
   }

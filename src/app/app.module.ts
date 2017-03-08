@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
-import { MatchTableComponent, EditableTextComponent, JoinPipe } from './match-table.component';
+import { MatchTableComponent, EditableNumberComponent, JoinPipe } from './match-table.component';
 import { RankingsTableComponent } from './rankings-table.component';
 
 @NgModule({
@@ -14,7 +14,7 @@ import { RankingsTableComponent } from './rankings-table.component';
     MatchTableComponent,
     RankingsTableComponent,
     JoinPipe,
-    EditableTextComponent
+    EditableNumberComponent
   ],
   imports: [
     BrowserModule,

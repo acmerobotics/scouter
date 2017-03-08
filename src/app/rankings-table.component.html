@@ -1,9 +1,14 @@
-<p *ngIf="!oprReady()">OPR could not be calculated</p>
-<table class="ui sortable fixed table">
+<div (click)="downloadRankings()" class="ui right floated small blue labeled icon button" id="import">
+  <i class="save icon"></i> Download
+</div>
+<div *ngIf="!oprReady()" class="ui pointing below red basic label">
+  OPR could not be calculated
+</div>
+<table class="ui fixed table">
   <thead>
     <tr>
       <th class="single line">Rank</th>
-      <th>Number</th>
+      <th>Team</th>
       <th *ngIf="oprReady()">OPR</th>
       <th>QP</th>
       <th>RP</th>
