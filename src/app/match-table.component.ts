@@ -129,13 +129,14 @@ export class EditableNumberComponent implements OnInit {
         return;
       }
       if (this.array) {
-        var array = this.val.split(",");
+        var array: any[] = this.val.split(",");
         for (var i = 0; i < array.length; i++) {
           var val = parseInt(array[i], 10);
           if (val != val) {
             console.log("invalid: " + this.val);
             return;
           }
+          array[i] = val;
         }
         this.obj[this.key] = array;
       } else {
