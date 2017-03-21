@@ -18,8 +18,8 @@ export class Match {
 
   static empty(): Match {
       let m = new Match();
-      m.redTeams = [0, 0];
-      m.blueTeams = [0, 0];
+      m.redTeams = [];
+      m.blueTeams = [];
       m.redScore = {
           auto: 0,
           tele: 0,

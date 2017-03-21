@@ -35,4 +35,93 @@ export class MatchParserService {
         }
         return matches;
     }
+
+    parseHTML(data: string): Match[] {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(data, "text/html");
+        var matches: Match[] = [];
+        
+        var tables = doc.getElementsByTagName("table");
+        console.log("found " + tables.length + " tables");
+        for (var i = 0; i < tables.length; i++) {
+            console.log(tables[i]);
+            var m = this.parseTable(tables[i]);
+            for (var j = 0; j < m.length; j++) {
+                matches.push(m[j]);
+            }
+        }
+
+        return matches;
+    }
+
+    parseTable(table: HTMLElement): Match[] {
+        var matches: Match[] = [];
+        var rows = table.getElementsByTagName("tr");
+        var th = rows[0].getElementsByTagName("th")[0];
+        if (th === undefined) {
+
+        } else if (th.innerHTML == "Match") {
+            // abbreviated
+            console.log("table matched abbreviated");
+            for (var i = 1; i < rows.length;) {
+                var firstRow = rows[i].getElementsByTagName("td");
+                var secondRow = rows[i + 1].getElementsByTagName("td");
+                var m = Match.empty();
+                m.redTeams = [
+                    parseInt(firstRow[2].innerHTML, 10),
+                    parseInt(secondRow[0].innerHTML, 10)
+                ];
+                m.blueTeams = [
+                    parseInt(firstRow[3].innerHTML, 10),
+                    parseInt(secondRow[1].innerHTML, 10)
+                ];
+                var results = firstRow[1].innerHTML.split(" ")[0].split("-");
+                m.redScore.total = parseInt(results[0], 10);
+                m.blueScore.total = parseInt(results[1], 10);
+                matches.push(m);
+                if (firstRow[0].innerHTML.startsWith("Q")) {
+                    i += 2;
+                } else {
+                    // i += 3;
+                    break;
+                }
+            }
+        } else if (rows.length >= 2) {
+            // details
+            console.log("table matched details");
+            var firstCell = rows[1].getElementsByTagName("th")[0];
+            // console.log(firstCell === undefined ? "?" : "\"" + firstCell.innerHTML + "\"");
+            if (firstCell !== undefined && firstCell.innerHTML == "Match") {
+                for (var i = 2; i < rows.length; i++) {
+                    var row = rows[i].getElementsByTagName("td");
+                    if (!row[0].innerHTML.startsWith("Q")) {
+                        break;
+                    }
+                    var m = Match.empty();
+                    var redTeams = row[2].innerHTML.split(" ");
+                    var blueTeams = row[3].innerHTML.split(" ");
+                    for (var j = 0; j < redTeams.length - 1; j++) {
+                        m.redTeams.push(parseInt(redTeams[j]));
+                        m.blueTeams.push(parseInt(blueTeams[j]));
+                    }
+                    m.redScore = {
+                        total: parseInt(row[4].innerHTML, 10),
+                        auto: parseInt(row[5].innerHTML, 10),
+                        tele: parseInt(row[7].innerHTML, 10),
+                        end: parseInt(row[8].innerHTML, 10),
+                        penalties: parseInt(row[9].innerHTML, 10)
+                    };
+                    m.blueScore = {
+                        total: parseInt(row[10].innerHTML, 10),
+                        auto: parseInt(row[11].innerHTML, 10),
+                        tele: parseInt(row[13].innerHTML, 10),
+                        end: parseInt(row[14].innerHTML, 10),
+                        penalties: parseInt(row[15].innerHTML, 10)
+                    };
+                    matches.push(m);
+                }
+            }
+        }
+        return matches;
+    }
 }

@@ -65,7 +65,6 @@ export class MatchTableComponent {
         // Closure to capture the file information.
         reader.onload = function(evt) {
           var contents: string = reader.result;
-          console.log(contents);
           if (contents.charAt(0) == "[") {
             this_.matches = [];
             var data = JSON.parse(contents);
@@ -76,6 +75,8 @@ export class MatchTableComponent {
               }
               this_.matches.push(m);
             }
+          } else if (contents.charAt(0) == "<") {
+            this_.matches = this_.matchParser.parseHTML(contents);
           } else {
             this_.matches = this_.matchParser.parseCSV(contents);
           }
