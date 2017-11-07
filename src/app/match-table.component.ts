@@ -8,7 +8,7 @@ import { CSV } from './csv';
 
 @Component({
   templateUrl: './match-table.component.html',
-  selector: 'match-table',
+  selector: 'app-match-table',
   providers: [MatchParserService]
 })
 export class MatchTableComponent {
@@ -24,8 +24,8 @@ export class MatchTableComponent {
   }
 
   removeMatch(match): void {
-    for (var i = 0; i < this.matches.length; i++) {
-      if (this.matches[i] == match) {
+    for (let i = 0; i < this.matches.length; i++) {
+      if (this.matches[i] === match) {
         this.matches.splice(i, 1);
         this.updateMatches();
         return;
@@ -34,55 +34,51 @@ export class MatchTableComponent {
   }
 
   updateMatches(): void {
-    console.log("emitting");
     this.update.emit(this.matches);
   }
 
   downloadMatchData() {
-    var a = document.createElement("a");
-    a.style.display = "none";
+    const a = document.createElement('a');
+    a.style.display = 'none';
     document.body.appendChild(a);
-    var blob = new Blob([JSON.stringify(this.matches)], { type: 'octet/stream' });
-    var url = window.URL.createObjectURL(blob);
+    const blob = new Blob([JSON.stringify(this.matches)], { type: 'octet/stream' });
+    const url = window.URL.createObjectURL(blob);
     a.href = url;
-    a.download = "matches.json";
+    a.download = 'matches.json';
     a.click();
     window.URL.revokeObjectURL(url);
   }
 
   importMatchData() {
-    var this_ = this;
-    var input = document.createElement("input");
-    input.type = "file";
-    input.style.display = "none";
-    input.addEventListener("change", function(evt) {
-      var files = input.files; // FileList object
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.style.display = 'none';
+    input.addEventListener('change', (evt) => {
+      const files = input.files;
 
-      // Loop through the FileList and render image files as thumbnails.
-      for (var i = 0, f; f = files[i]; i++) {
-        var reader = new FileReader();
+      for (let i = 0, f; f = files[i]; i++) {
+        const reader = new FileReader();
 
-        // Closure to capture the file information.
-        reader.onload = function(evt) {
-          var contents: string = reader.result.trim();
-          if (contents.charAt(0) == "[") {
-            this_.matches = [];
-            var data = JSON.parse(contents);
-            for (var i = 0; i < data.length; i++) {
-              var m = new Match();
-              for (var key in data[i]) {
-                m[key] = data[i][key];
+        reader.onload = (readerEvt) => {
+          const contents: string = reader.result.trim();
+          if (contents.charAt(0) === '[') {
+            this.matches = [];
+            const data = JSON.parse(contents);
+            for (let j = 0; j < data.length; j++) {
+              const m = new Match();
+              for (const key in data[j]) {
+                if (data[j].hasOwnProperty(key)) {
+                  m[key] = data[j][key];
+                }
               }
-              this_.matches.push(m);
+              this.matches.push(m);
             }
-          } else if (contents.charAt(0) == "<") {
-            this_.matches = this_.matchParser.parseHTML(contents);
+          } else if (contents.charAt(0) === '<') {
+            this.matches = this.matchParser.parseHTML(contents);
           } else {
-            this_.matches = this_.matchParser.parseCSV(contents);
+            this.matches = this.matchParser.parseCSV(contents);
           }
-          console.log("import");
-          console.log(this_.matches);
-          this_.updateMatches();
+          this.updateMatches();
         };
 
         // Read in the image file as a data URL.
@@ -95,12 +91,12 @@ export class MatchTableComponent {
 }
 
 @Component({
-  selector: 'editable-num',
+  selector: 'app-editable-num',
   template: `
-  <div *ngIf="editing" class="ui fluid input">
-    <input (blur)="toggleEdit()" [(ngModel)]="val" type="text" style="width: 100%;" />
+  <div *ngIf='editing' class='ui fluid input'>
+    <input (blur)='toggleEdit()' [(ngModel)]='val' type='text' style='width: 100%;' />
   </div>
-  <span (dblclick)="toggleEdit()" *ngIf="!editing">{{ obj[key] | join:'&nbsp;&nbsp;&nbsp;&nbsp;' }}</span>
+  <span (dblclick)='toggleEdit()' *ngIf='!editing'>{{ obj[key] | join:'&nbsp;&nbsp;&nbsp;&nbsp;' }}</span>
   `
 })
 export class EditableNumberComponent implements OnInit {
@@ -114,39 +110,36 @@ export class EditableNumberComponent implements OnInit {
   array = false;
 
   ngOnInit() {
-    var val = this.obj[this.key];
+    const val = this.obj[this.key];
     if (val instanceof Array) {
       this.array = true;
-      this.val = val.join(",");
+      this.val = val.join(',');
     } else {
       this.val = val;
     }
   }
 
   toggleEdit() {
-    console.log("toggle edit");
     if (this.editing) {
-      if (this.val === "") {
+      if (this.val === '') {
         return;
       }
       if (this.array) {
-        var array: any[] = this.val.split(",");
-        for (var i = 0; i < array.length; i++) {
-          var val = parseInt(array[i], 10);
-          if (val != val) {
-            console.log("invalid: " + this.val);
+        const array: any[] = this.val.split(',');
+        for (let i = 0; i < array.length; i++) {
+          const parsedVal = parseInt(array[i], 10);
+          if (isNaN(parsedVal)) {
             return;
           }
-          array[i] = val;
+          array[i] = parsedVal;
         }
         this.obj[this.key] = array;
       } else {
-        var val = parseInt(this.val, 10);
-        if (val != val) {
-          console.log("invalid: " + this.val);
+        const parsedVal = parseInt(this.val, 10);
+        if (isNaN(parsedVal)) {
           return;
         }
-        this.obj[this.key] = val;
+        this.obj[this.key] = parsedVal;
       }
       this.change.emit();
     }
@@ -156,7 +149,7 @@ export class EditableNumberComponent implements OnInit {
 
 @Pipe({name: 'join'})
 export class JoinPipe implements PipeTransform {
-  transform(value: any, separator: string = " "): string {
+  transform(value: any, separator: string = ' '): string {
     if (value instanceof Array) {
       return value.join(separator);
     } else {

@@ -1,9 +1,9 @@
 export class TeamMatchResult {
-    number: number = 0;
-    opr: number = 0;
-    qp: number = 0;
-    rp: number = 0;
-    rank: number = 0;
+    number = 0;
+    opr = 0;
+    qp = 0;
+    rp = 0;
+    rank = 0;
 
     constructor(number: number) {
         this.number = number;

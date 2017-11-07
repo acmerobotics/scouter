@@ -17,7 +17,7 @@ export class Match {
   };
 
   static empty(): Match {
-      let m = new Match();
+      const m = new Match();
       m.redTeams = [];
       m.blueTeams = [];
       m.redScore = {
@@ -25,14 +25,14 @@ export class Match {
           tele: 0,
           end: 0,
           penalties: 0,
-          total:0
+          total: 0
       };
       m.blueScore = {
           auto: 0,
           tele: 0,
           end: 0,
           penalties: 0,
-          total:0
+          total: 0
       };
       return m;
   }

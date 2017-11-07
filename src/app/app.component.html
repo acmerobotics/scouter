@@ -1,13 +1,13 @@
 <div class="ui relaxed padded grid">
   <div id="matches" class="ten wide column">
     <h1 class="ui left floated header">Matches</h1>
-    <match-table (update)="rankings.matches=$event;rankings.updateRankings()" [matches]="matches"></match-table>
+    <app-match-table (update)="rankings.matches=$event;rankings.updateRankings()" [matches]="matches"></app-match-table>
   </div>
   <div id="rankings" class="six wide column">
     <div id="progress" class="ui dimmer">
       <div class="ui loader"></div>
     </div>
     <h1 class="ui left floated header">Rankings</h1>
-    <rankings-table [matches]="matches" #rankings></rankings-table>
+    <app-rankings-table [matches]="matches" #rankings></app-rankings-table>
   </div>
 </div>

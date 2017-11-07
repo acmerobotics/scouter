@@ -7,16 +7,22 @@ import { CSV } from './csv';
 @Injectable()
 export class MatchParserService {
     parseCSV(data: string): Match[] {
-        var matches: Match[] = [];
-        let rows = CSV.parse(data);
-        for (var i = 0; i < rows.length - 1; i++) {
-            var row = rows[i];
-            if (row.Match.indexOf("Q") == -1) continue;
-            var match = new Match();
+        const matches: Match[] = [];
+        const rows = CSV.parse(data);
+        for (let i = 0; i < rows.length - 1; i++) {
+            const row = rows[i];
+            if (row.Match.indexOf('Q') === -1) {
+                continue;
+            }
+            const match = new Match();
             match.redTeams = [ row.Red1, row.Red2 ];
             match.blueTeams = [ row.Blue1, row.Blue2 ];
-            if (row.Red3 != 0) match.redTeams.push(row.Red3);
-            if (row.Blue3 != 0) match.blueTeams.push(row.Blue3);
+            if (row.Red3 !== 0) {
+                match.redTeams.push(row.Red3);
+            }
+            if (row.Blue3 !== 0) {
+                match.blueTeams.push(row.Blue3);
+            }
             match.redScore = {
                 auto: row.RAuto,
                 tele: row.RTele,
@@ -37,16 +43,14 @@ export class MatchParserService {
     }
 
     parseHTML(data: string): Match[] {
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(data, "text/html");
-        var matches: Match[] = [];
-        
-        var tables = doc.getElementsByTagName("table");
-        console.log("found " + tables.length + " tables");
-        for (var i = 0; i < tables.length; i++) {
-            console.log(tables[i]);
-            var m = this.parseTable(tables[i]);
-            for (var j = 0; j < m.length; j++) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+        const matches: Match[] = [];
+
+        const tables = doc.getElementsByTagName('table');
+        for (let i = 0; i < tables.length; i++) {
+            const m = this.parseTable(tables[i]);
+            for (let j = 0; j < m.length; j++) {
                 matches.push(m[j]);
             }
         }
@@ -55,18 +59,17 @@ export class MatchParserService {
     }
 
     parseTable(table: HTMLElement): Match[] {
-        var matches: Match[] = [];
-        var rows = table.getElementsByTagName("tr");
-        var th = rows[0].getElementsByTagName("th")[0];
+        const matches: Match[] = [];
+        const rows = table.getElementsByTagName('tr');
+        const th = rows[0].getElementsByTagName('th')[0];
         if (th === undefined) {
-
-        } else if (th.innerHTML == "Match") {
+            // do nothing
+        } else if (th.innerHTML === 'Match') {
             // abbreviated
-            console.log("table matched abbreviated");
-            for (var i = 1; i < rows.length;) {
-                var firstRow = rows[i].getElementsByTagName("td");
-                var secondRow = rows[i + 1].getElementsByTagName("td");
-                var m = Match.empty();
+            for (let i = 1; i < rows.length;) {
+                const firstRow = rows[i].getElementsByTagName('td');
+                const secondRow = rows[i + 1].getElementsByTagName('td');
+                const m = Match.empty();
                 m.redTeams = [
                     parseInt(firstRow[2].innerHTML, 10),
                     parseInt(secondRow[0].innerHTML, 10)
@@ -75,11 +78,11 @@ export class MatchParserService {
                     parseInt(firstRow[3].innerHTML, 10),
                     parseInt(secondRow[1].innerHTML, 10)
                 ];
-                var results = firstRow[1].innerHTML.split(" ")[0].split("-");
+                const results = firstRow[1].innerHTML.split(' ')[0].split('-');
                 m.redScore.total = parseInt(results[0], 10);
                 m.blueScore.total = parseInt(results[1], 10);
                 matches.push(m);
-                if (firstRow[0].innerHTML.startsWith("Q")) {
+                if (firstRow[0].innerHTML.startsWith('Q')) {
                     i += 2;
                 } else {
                     // i += 3;
@@ -88,21 +91,19 @@ export class MatchParserService {
             }
         } else if (rows.length >= 2) {
             // details
-            console.log("table matched details");
-            var firstCell = rows[1].getElementsByTagName("th")[0];
-            // console.log(firstCell === undefined ? "?" : "\"" + firstCell.innerHTML + "\"");
-            if (firstCell !== undefined && firstCell.innerHTML == "Match") {
-                for (var i = 2; i < rows.length; i++) {
-                    var row = rows[i].getElementsByTagName("td");
-                    if (!row[0].innerHTML.startsWith("Q")) {
+            const firstCell = rows[1].getElementsByTagName('th')[0];
+            if (firstCell !== undefined && firstCell.innerHTML === 'Match') {
+                for (let i = 2; i < rows.length; i++) {
+                    const row = rows[i].getElementsByTagName('td');
+                    if (!row[0].innerHTML.startsWith('Q')) {
                         break;
                     }
-                    var m = Match.empty();
-                    var redTeams = row[2].innerHTML.split(" ");
-                    var blueTeams = row[3].innerHTML.split(" ");
-                    for (var j = 0; j < redTeams.length - 1; j++) {
-                        m.redTeams.push(parseInt(redTeams[j]));
-                        m.blueTeams.push(parseInt(blueTeams[j]));
+                    const m = Match.empty();
+                    const redTeams = row[2].innerHTML.split(' ');
+                    const blueTeams = row[3].innerHTML.split(' ');
+                    for (let j = 0; j < redTeams.length - 1; j++) {
+                        m.redTeams.push(parseInt(redTeams[j], 10));
+                        m.blueTeams.push(parseInt(blueTeams[j], 10));
                     }
                     m.redScore = {
                         total: parseInt(row[4].innerHTML, 10),
